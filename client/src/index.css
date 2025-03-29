@@ -9,5 +9,86 @@
 
   body {
     @apply font-sans antialiased bg-background text-foreground;
+    background: linear-gradient(to bottom, hsl(210, 12%, 12%), hsl(210, 10%, 8%));
+    min-height: 100vh;
   }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-serif tracking-tight;
+  }
+
+  .card {
+    @apply backdrop-blur-sm bg-black/20 border border-white/10 hover:border-white/20 transition-all duration-300;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+  }
+  
+  .luxury-gradient {
+    @apply bg-gradient-to-r from-amber-300 via-amber-400 to-amber-200 text-transparent bg-clip-text;
+  }
+
+  .gold-border {
+    @apply border border-amber-400/50;
+  }
+}
+
+/* Animation Keyframes */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -100% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.7; }
+}
+
+/* Animation Classes */
+.animate-fade-in {
+  animation: fadeIn 0.5s ease-out forwards;
+}
+
+.animate-stagger > * {
+  opacity: 0;
+  animation: fadeIn 0.5s ease-out forwards;
+}
+
+.animate-stagger > *:nth-child(1) { animation-delay: 0.1s; }
+.animate-stagger > *:nth-child(2) { animation-delay: 0.2s; }
+.animate-stagger > *:nth-child(3) { animation-delay: 0.3s; }
+.animate-stagger > *:nth-child(4) { animation-delay: 0.4s; }
+.animate-stagger > *:nth-child(5) { animation-delay: 0.5s; }
+.animate-stagger > *:nth-child(6) { animation-delay: 0.6s; }
+
+.animate-shimmer {
+  background: linear-gradient(90deg, 
+    rgba(255, 215, 0, 0) 0%, 
+    rgba(255, 215, 0, 0.3) 50%, 
+    rgba(255, 215, 0, 0) 100%);
+  background-size: 200% 100%;
+  animation: shimmer 3s infinite;
+}
+
+.animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Indian-specific styling */
+.inr-symbol {
+  font-family: serif;
+  font-weight: 600;
+}
+
+/* Luxury accents */
+.luxury-accent {
+  @apply bg-amber-500/10 border-l-4 border-amber-400;
+}
+
+.luxury-btn {
+  @apply bg-gradient-to-r from-amber-700 to-amber-500 hover:from-amber-600 hover:to-amber-400 
+    text-white shadow-lg transition-all duration-300 hover:shadow-amber-500/20;
 }
