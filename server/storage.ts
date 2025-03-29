@@ -38,7 +38,7 @@ export interface IStorage {
   createReview(review: InsertReview): Promise<Review>;
   
   // Session store
-  sessionStore: session.SessionStore;
+  sessionStore: any; // express-session store
 }
 
 export class MemStorage implements IStorage {
@@ -54,7 +54,7 @@ export class MemStorage implements IStorage {
   private quoteId: number;
   private reviewId: number;
   
-  public sessionStore: session.SessionStore;
+  public sessionStore: any; // express-session store
 
   constructor() {
     this.users = new Map();
@@ -105,7 +105,9 @@ export class MemStorage implements IStorage {
   
   async getContractorsBySpecialty(specialty: string): Promise<Contractor[]> {
     return Array.from(this.contractors.values()).filter(
-      (contractor) => contractor.specialties.includes(specialty)
+      (contractor) => contractor.specialties && 
+      Array.isArray(contractor.specialties) && 
+      contractor.specialties.includes(specialty)
     );
   }
   
@@ -116,7 +118,10 @@ export class MemStorage implements IStorage {
       id, 
       rating: 0, 
       reviewCount: 0, 
-      createdAt: new Date() 
+      createdAt: new Date(),
+      specialties: insertContractor.specialties || null,
+      profileImage: insertContractor.profileImage || null,
+      phone: insertContractor.phone || null
     };
     this.contractors.set(id, contractor);
     return contractor;
@@ -139,7 +144,9 @@ export class MemStorage implements IStorage {
         contractor.description.toLowerCase().includes(lowercaseQuery) ||
         contractor.specialty.toLowerCase().includes(lowercaseQuery) ||
         contractor.location.toLowerCase().includes(lowercaseQuery) ||
-        contractor.specialties.some(spec => spec.toLowerCase().includes(lowercaseQuery))
+        (contractor.specialties && 
+         Array.isArray(contractor.specialties) && 
+         contractor.specialties.some(spec => spec.toLowerCase().includes(lowercaseQuery)))
     );
   }
   
@@ -161,7 +168,15 @@ export class MemStorage implements IStorage {
       ...insertProject, 
       id, 
       createdAt: now, 
-      updatedAt: now 
+      updatedAt: now,
+      status: insertProject.status || 'planning',
+      location: insertProject.location || null,
+      estimatedCostMin: insertProject.estimatedCostMin || null,
+      estimatedCostMax: insertProject.estimatedCostMax || null,
+      timeline: insertProject.timeline || null,
+      squareFootage: insertProject.squareFootage || null,
+      details: insertProject.details || null,
+      actualCost: null
     };
     this.projects.set(id, project);
     return project;
@@ -203,7 +218,12 @@ export class MemStorage implements IStorage {
     const quote: Quote = { 
       ...insertQuote, 
       id, 
-      createdAt: new Date() 
+      createdAt: new Date(),
+      status: insertQuote.status || 'pending',
+      description: insertQuote.description || null,
+      timeline: insertQuote.timeline || null,
+      amount: insertQuote.amount || null,
+      details: insertQuote.details || null
     };
     this.quotes.set(id, quote);
     return quote;
@@ -244,7 +264,9 @@ export class MemStorage implements IStorage {
     const review: Review = { 
       ...insertReview, 
       id, 
-      createdAt: new Date() 
+      createdAt: new Date(),
+      projectId: insertReview.projectId || null,
+      review: insertReview.review || null
     };
     this.reviews.set(id, review);
     
@@ -332,4 +354,9 @@ export class MemStorage implements IStorage {
   }
 }
 
-export const storage = new MemStorage();
+// Import the DatabaseStorage implementation
+import { DatabaseStorage } from './storage.pg';
+
+// Comment out the MemStorage implementation and use DatabaseStorage instead
+// export const storage = new MemStorage();
+export const storage = new DatabaseStorage();
