@@ -152,7 +152,7 @@ export default function DesignInspirationCarousel() {
         style: saved.style,
         room: saved.room,
         description: saved.description || '',
-        image: saved.imageUrl,
+        image: saved.image_url,
         tips: saved.tips || [],
         prompt: saved.prompt || undefined,
       }));

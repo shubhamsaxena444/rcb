@@ -185,8 +185,8 @@ export class DatabaseStorage implements IStorage {
   async getDesignInspirationsByUserId(userId: number): Promise<SavedDesignInspiration[]> {
     return await db.select()
       .from(designInspirations)
-      .where(eq(designInspirations.userId, userId))
-      .orderBy(desc(designInspirations.createdAt));
+      .where(eq(designInspirations.user_id, userId))
+      .orderBy(desc(designInspirations.created_at));
   }
   
   async createDesignInspiration(insertInspiration: InsertDesignInspiration): Promise<SavedDesignInspiration> {

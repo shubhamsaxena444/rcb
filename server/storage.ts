@@ -306,7 +306,7 @@ export class MemStorage implements IStorage {
   
   async getDesignInspirationsByUserId(userId: number): Promise<SavedDesignInspiration[]> {
     return Array.from(this.designInspirations.values()).filter(
-      (inspiration) => inspiration.userId === userId
+      (inspiration) => inspiration.user_id === userId
     );
   }
   
@@ -315,9 +315,9 @@ export class MemStorage implements IStorage {
     const inspiration: SavedDesignInspiration = {
       ...insertInspiration,
       id,
-      createdAt: new Date(),
+      created_at: new Date(),
       description: insertInspiration.description || null,
-      imageUrl: insertInspiration.imageUrl || null,
+      image_url: insertInspiration.image_url || null,
       prompt: insertInspiration.prompt || null,
       tips: insertInspiration.tips || [],
     };

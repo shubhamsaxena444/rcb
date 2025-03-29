@@ -7,6 +7,7 @@ import HomePage from "@/pages/home-page";
 import AuthPage from "@/pages/auth-page";
 import ProjectDetailPage from "@/pages/project-detail-page";
 import ContractorProfilePage from "@/pages/contractor-profile-page";
+import ContractorSearchPage from "@/pages/contractor-search-page";
 import CreateProjectPage from "@/pages/create-project-page";
 import QuoteDetailPage from "@/pages/quote-detail-page";
 import QuoteComparisonPage from "@/pages/quote-comparison-page";
@@ -22,6 +23,7 @@ function Router() {
       <ProtectedRoute path="/" component={HomePage} />
       <ProtectedRoute path="/projects/new" component={CreateProjectPage} />
       <ProtectedRoute path="/projects/:id" component={ProjectDetailPage} />
+      <ProtectedRoute path="/contractors" component={ContractorSearchPage} />
       <ProtectedRoute path="/contractors/:id" component={ContractorProfilePage} />
       <ProtectedRoute path="/quotes/:id" component={QuoteDetailPage} />
       <ProtectedRoute path="/quotes/compare/:projectId" component={QuoteComparisonPage} />

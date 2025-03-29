@@ -31,6 +31,10 @@ export const contractors = pgTable("contractors", {
   reviewCount: integer("review_count").default(0),
   specialties: text("specialties").array(),
   location: text("location").notNull(),
+  latitude: doublePrecision("latitude"),
+  longitude: doublePrecision("longitude"),
+  minRate: integer("min_rate").default(500),
+  maxRate: integer("max_rate").default(2500),
   createdAt: timestamp("created_at").defaultNow(),
 });
 
@@ -111,19 +115,19 @@ export const insertReviewSchema = createInsertSchema(reviews).omit({
 // Design Inspirations model
 export const designInspirations = pgTable("design_inspirations", {
   id: serial("id").primaryKey(),
-  userId: integer("user_id").notNull().references(() => users.id, { onDelete: 'cascade' }),
+  user_id: integer("user_id").notNull().references(() => users.id, { onDelete: 'cascade' }),
   room: text("room").notNull(),
   style: text("style").notNull(),
   description: text("description"),
-  imageUrl: text("image_url"),
+  image_url: text("image_url"),
   prompt: text("prompt"),
   tips: text("tips").array(),
-  createdAt: timestamp("created_at").defaultNow(),
+  created_at: timestamp("created_at").defaultNow(),
 });
 
 export const insertDesignInspirationSchema = createInsertSchema(designInspirations).omit({
   id: true,
-  createdAt: true,
+  created_at: true,
 });
 
 // Estimate request schema (for API)
@@ -199,7 +203,7 @@ export const reviewsRelations = relations(reviews, ({ one }) => ({
 
 export const designInspirationsRelations = relations(designInspirations, ({ one }) => ({
   user: one(users, {
-    fields: [designInspirations.userId],
+    fields: [designInspirations.user_id],
     references: [users.id],
   }),
 }));

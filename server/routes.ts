@@ -305,11 +305,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
       // Save the generated design to the database
       if (inspiration && inspiration.image) {
         await storage.createDesignInspiration({
-          userId: req.user.id,
+          user_id: req.user.id,
           room: validatedData.room,
           style: validatedData.style,
           description: validatedData.description || null,
-          imageUrl: inspiration.image,
+          image_url: inspiration.image,
           prompt: inspiration.prompt || null,
           tips: inspiration.tips || [],
         });

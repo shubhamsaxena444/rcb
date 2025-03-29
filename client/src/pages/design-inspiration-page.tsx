@@ -74,9 +74,9 @@ export default function DesignInspirationPage() {
                       </CardDescription>
                     </CardHeader>
                     <CardContent className="p-4 pt-0 flex-grow flex items-center justify-center">
-                      {design.imageUrl ? (
+                      {design.image_url ? (
                         <img
-                          src={design.imageUrl}
+                          src={design.image_url}
                           alt={`${design.style} ${design.room}`}
                           className="rounded-md object-cover w-full h-48"
                           onClick={() => openDetailView(design)}
@@ -149,9 +149,9 @@ export default function DesignInspirationPage() {
               </DialogHeader>
               <div className="py-4">
                 <div className="rounded-md overflow-hidden mb-4">
-                  {selectedDesign.imageUrl && (
+                  {selectedDesign.image_url && (
                     <img
-                      src={selectedDesign.imageUrl}
+                      src={selectedDesign.image_url}
                       alt={`${selectedDesign.style} ${selectedDesign.room}`}
                       className="w-full object-cover max-h-[400px]"
                     />
