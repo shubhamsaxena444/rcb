@@ -189,6 +189,14 @@ export type Quote = typeof quotes.$inferSelect;
 export type InsertQuote = z.infer<typeof insertQuoteSchema>;
 export type Review = typeof reviews.$inferSelect;
 export type InsertReview = z.infer<typeof insertReviewSchema>;
+// Design inspiration schema (for AI)
+export const designInspirationSchema = z.object({
+  room: z.string(),
+  style: z.string(),
+  description: z.string().optional()
+});
+
 export type RenovationEstimate = z.infer<typeof renovationEstimateSchema>;
 export type ConstructionEstimate = z.infer<typeof constructionEstimateSchema>;
 export type QuoteRequest = z.infer<typeof quoteRequestSchema>;
+export type DesignInspiration = z.infer<typeof designInspirationSchema>;

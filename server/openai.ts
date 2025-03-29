@@ -1,5 +1,15 @@
 import OpenAI from "openai";
 import { RenovationEstimate, ConstructionEstimate } from "@shared/schema";
+import { z } from "zod";
+
+// Define schema for design inspiration requests
+export const designInspirationSchema = z.object({
+  style: z.string(),
+  room: z.string(),
+  description: z.string().optional(),
+});
+
+export type DesignInspiration = z.infer<typeof designInspirationSchema>;
 
 // Initialize Azure OpenAI client
 const openai = new OpenAI({
@@ -160,5 +170,93 @@ export async function estimateConstructionCost(data: ConstructionEstimate): Prom
     }
     
     throw new Error("Failed to generate construction cost estimate: " + (error?.message || "Unknown error"));
+  }
+}
+
+// Design inspiration generation using DALL-E
+export async function generateDesignInspiration(data: DesignInspiration): Promise<any> {
+  try {
+    // First, generate a detailed prompt for the DALL-E model
+    const promptGenerationResponse = await openai.chat.completions.create({
+      model: process.env.AZURE_OPENAI_DEPLOYMENT_NAME || "",
+      messages: [
+        { 
+          role: "system", 
+          content: "You are an interior designer specialized in Indian home designs. Your task is to create a detailed prompt for an AI image generator (DALL-E) to visualize a specific room design. Focus on creating visual prompts that reflect Indian design sensibilities, materials, and aesthetics when appropriate." 
+        },
+        { 
+          role: "user", 
+          content: `Create a detailed DALL-E prompt to generate an image of a ${data.room} in the ${data.style} style for an Indian home. ${data.description ? `Additional details: ${data.description}` : ''}`
+        }
+      ],
+    });
+
+    const promptContent = promptGenerationResponse.choices[0].message.content || "";
+    
+    // Generate design description
+    const descriptionResponse = await openai.chat.completions.create({
+      model: process.env.AZURE_OPENAI_DEPLOYMENT_NAME || "",
+      messages: [
+        { 
+          role: "system", 
+          content: "You are an interior designer specialized in Indian home designs. Provide a brief but informative description of the design, highlighting key elements, materials, and how it fits Indian homes and lifestyle." 
+        },
+        { 
+          role: "user", 
+          content: `Describe a ${data.room} in the ${data.style} style for an Indian home. ${data.description ? `Additional details: ${data.description}` : ''}`
+        }
+      ],
+    });
+
+    const designDescription = descriptionResponse.choices[0].message.content || "";
+
+    // Generate design tips
+    const tipsResponse = await openai.chat.completions.create({
+      model: process.env.AZURE_OPENAI_DEPLOYMENT_NAME || "",
+      messages: [
+        { 
+          role: "system", 
+          content: "You are an interior designer specialized in Indian home designs. Provide 3 practical design tips related to the requested design that would be helpful for homeowners in India." 
+        },
+        { 
+          role: "user", 
+          content: `Give 3 design tips for a ${data.room} in the ${data.style} style for an Indian home. ${data.description ? `Additional details: ${data.description}` : ''}`
+        }
+      ],
+      response_format: { type: "json_object" }
+    });
+
+    const tipsContent = tipsResponse.choices[0].message.content || "{}";
+    const tips = JSON.parse(typeof tipsContent === 'string' ? tipsContent : "{}");
+
+    // Generate image using DALL-E
+    const imageResponse = await openai.images.generate({
+      model: "dall-e-3",
+      prompt: promptContent,
+      n: 1,
+      size: "1024x1024",
+      quality: "standard",
+    });
+
+    return {
+      image: imageResponse.data[0]?.url,
+      prompt: promptContent,
+      description: designDescription,
+      tips: tips.tips || [],
+      style: data.style,
+      room: data.room
+    };
+  } catch (error: any) {
+    console.error("Error generating design inspiration:", error);
+    
+    // Check if this is a rate limit or quota error
+    if (error?.error?.type === 'insufficient_quota' || 
+        error?.status === 429 || 
+        error?.message?.includes('quota') || 
+        error?.message?.includes('rate limit')) {
+      throw new Error("OpenAI API rate limit exceeded. Please try again later or contact support for assistance.");
+    }
+    
+    throw new Error("Failed to generate design inspiration: " + (error?.message || "Unknown error"));
   }
 }

@@ -10,9 +10,11 @@ import ContractorProfilePage from "@/pages/contractor-profile-page";
 import CreateProjectPage from "@/pages/create-project-page";
 import QuoteDetailPage from "@/pages/quote-detail-page";
 import QuoteComparisonPage from "@/pages/quote-comparison-page";
+import DesignInspirationPage from "@/pages/design-inspiration-page";
 import { ProtectedRoute } from "./lib/protected-route";
 import { AuthProvider } from "./hooks/use-auth";
 import ChatBot from "@/components/chat/chat-bot";
+import NavBar from "@/components/layout/nav-bar";
 
 function Router() {
   return (
@@ -23,6 +25,7 @@ function Router() {
       <ProtectedRoute path="/contractors/:id" component={ContractorProfilePage} />
       <ProtectedRoute path="/quotes/:id" component={QuoteDetailPage} />
       <ProtectedRoute path="/quotes/compare/:projectId" component={QuoteComparisonPage} />
+      <ProtectedRoute path="/design-inspiration" component={DesignInspirationPage} />
       <Route path="/auth" component={AuthPage} />
       <Route component={NotFound} />
     </Switch>
@@ -33,7 +36,12 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
-        <Router />
+        <div className="flex flex-col min-h-screen">
+          <NavBar />
+          <main className="flex-1">
+            <Router />
+          </main>
+        </div>
         <ChatBot />
         <Toaster />
       </AuthProvider>
