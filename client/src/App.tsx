@@ -61,8 +61,7 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
         <div className="min-h-screen flex flex-col">
-          <div className="fixed top-0 left-0 w-full h-full -z-10 bg-gradient-to-b from-slate-900 to-black opacity-60"></div>
-          <div className="fixed top-0 left-0 w-full h-full -z-20 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI1IiBoZWlnaHQ9IjUiPgo8cmVjdCB3aWR0aD0iNSIgaGVpZ2h0PSI1IiBmaWxsPSIjMDAwMDAwIj48L3JlY3Q+CjxwYXRoIGQ9Ik0wIDVMNSAwWk02IDRMNCA2Wk0tMSAxTDEgLTFaIiBzdHJva2U9IiMyMjIiIHN0cm9rZS13aWR0aD0iMC41Ij48L3BhdGg+Cjwvc3ZnPg==')] opacity-20"></div>
+          <div className="fixed top-0 left-0 w-full h-full -z-10 bg-gradient-to-b from-zinc-800 to-zinc-900"></div>
           <Router />
           <Toaster />
         </div>

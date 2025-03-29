@@ -56,40 +56,40 @@ export default function EstimateResult({ estimationResult, estimationType }: Est
 
   return (
     <div className={`transition-opacity duration-500 ${isVisible ? 'opacity-100' : 'opacity-0'}`}>
-      <h3 className="text-xl font-medium mb-4 luxury-gradient font-bold">Estimated Cost Breakdown</h3>
+      <h3 className="text-xl mb-4 text-amber-500 font-bold">Estimated Cost Breakdown</h3>
       
-      <div className="card p-6 rounded-lg animate-stagger">
-        <div className="flex justify-between items-center mb-4 pb-4 border-b border-amber-500/20">
-          <span className="text-sm font-medium text-gray-400">Total Estimated Cost:</span>
+      <div className="card p-6 animate-stagger">
+        <div className="flex justify-between items-center mb-6 pb-4 border-b border-zinc-700">
+          <span className="font-medium text-zinc-300">Total Estimated Cost:</span>
           <div className="flex items-center">
-            <IndianRupee className="h-5 w-5 mr-1 text-amber-400" />
-            <span className="text-2xl font-bold luxury-gradient">{convertToINR(estimationResult.totalCost)}</span>
+            <IndianRupee className="h-5 w-5 mr-1 text-amber-500" />
+            <span className="text-2xl font-bold text-white">{convertToINR(estimationResult.totalCost)}</span>
           </div>
         </div>
         
         <div className="mt-6">
-          <h4 className="text-sm font-medium text-amber-400 mb-3">Detailed Breakdown</h4>
+          <h4 className="font-medium text-amber-500 mb-3">Detailed Breakdown</h4>
           <div className="space-y-3">
             {Object.entries(estimationResult.breakdown).map(([key, value], index) => (
-              <div key={key} className="flex justify-between items-center py-2 border-b border-white/5" style={{animationDelay: `${index * 0.1}s`}}>
-                <span className="text-sm text-gray-300">{key.charAt(0).toUpperCase() + key.slice(1).replace(/([A-Z])/g, ' $1')}</span>
-                <span className="text-sm font-medium text-amber-300">{convertToINR(value)}</span>
+              <div key={key} className="flex justify-between items-center py-2 border-b border-zinc-700" style={{animationDelay: `${index * 0.1}s`}}>
+                <span className="text-zinc-300">{key.charAt(0).toUpperCase() + key.slice(1).replace(/([A-Z])/g, ' $1')}</span>
+                <span className="font-medium text-amber-400">{convertToINR(value)}</span>
               </div>
             ))}
           </div>
         </div>
         
-        <div className="mt-6 p-4 luxury-accent rounded">
-          <h4 className="text-sm font-medium text-amber-400 mb-2">AI Recommendations</h4>
-          <p className="text-sm text-gray-300">
+        <div className="mt-6 luxury-accent">
+          <h4 className="font-medium text-amber-500 mb-2">AI Recommendations</h4>
+          <p className="text-zinc-300">
             {estimationResult.recommendations}
           </p>
         </div>
         
         {estimationResult.timeline && (
           <div className="mt-6 animate-fade-in" style={{animationDelay: '0.5s'}}>
-            <h4 className="text-sm font-medium text-amber-400 mb-2">Estimated Timeline</h4>
-            <p className="text-sm text-gray-300">
+            <h4 className="font-medium text-amber-500 mb-2">Estimated Timeline</h4>
+            <p className="text-zinc-300">
               {estimationResult.timeline}
             </p>
           </div>
@@ -102,8 +102,8 @@ export default function EstimateResult({ estimationResult, estimationType }: Est
             <Users className="mr-2 h-4 w-4" /> Find Contractors
           </Button>
         </Link>
-        <Button variant="outline" className="w-full sm:w-auto gold-border" onClick={handleSaveEstimate}>
-          <Save className="mr-2 h-4 w-4 text-amber-400" /> Save Estimate
+        <Button variant="outline" className="w-full sm:w-auto gold-border text-amber-500" onClick={handleSaveEstimate}>
+          <Save className="mr-2 h-4 w-4" /> Save Estimate
         </Button>
       </div>
     </div>
