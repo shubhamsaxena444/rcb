@@ -26,7 +26,7 @@ export default function ContractorDirectory() {
   const buildQueryParams = () => {
     const params = new URLSearchParams();
     if (searchParams.query) params.append("search", searchParams.query);
-    if (searchParams.specialty) params.append("specialty", searchParams.specialty);
+    if (searchParams.specialty && searchParams.specialty !== 'all') params.append("specialty", searchParams.specialty);
     return params.toString();
   };
   
@@ -77,7 +77,7 @@ export default function ContractorDirectory() {
                     <SelectValue placeholder="All Specialties" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">All Specialties</SelectItem>
+                    <SelectItem value="all">All Specialties</SelectItem>
                     <SelectItem value="General">General Contractor</SelectItem>
                     <SelectItem value="Kitchen">Kitchen Specialist</SelectItem>
                     <SelectItem value="Bathroom">Bathroom Specialist</SelectItem>

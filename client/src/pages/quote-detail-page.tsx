@@ -28,6 +28,8 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 
+
+
 export default function QuoteDetailPage() {
   const { id } = useParams<{ id: string }>();
   const quoteId = parseInt(id);
@@ -113,7 +115,8 @@ export default function QuoteDetailPage() {
   };
 
   // Format date
-  const formatDate = (date: Date) => {
+  const formatDate = (date: Date | null) => {
+    if (!date) return "Not available";
     return new Date(date).toLocaleDateString();
   };
 
@@ -182,7 +185,7 @@ export default function QuoteDetailPage() {
                 <div className="mb-6">
                   <h3 className="text-lg font-semibold text-gray-900 mb-2">Project</h3>
                   <Link href={`/projects/${project.id}`}>
-                    <a className="text-primary font-medium hover:underline">{project.name}</a>
+                    <span className="text-primary font-medium hover:underline cursor-pointer">{project.name}</span>
                   </Link>
                   <p className="mt-1 text-gray-600">{project.description}</p>
                 </div>
@@ -229,14 +232,7 @@ export default function QuoteDetailPage() {
                 </div>
               )}
 
-              {quote.details && (
-                <div className="mt-6">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-2">Additional Details</h3>
-                  <pre className="whitespace-pre-wrap bg-gray-50 p-4 rounded-lg text-sm">
-                    {JSON.stringify(quote.details, null, 2)}
-                  </pre>
-                </div>
-              )}
+
             </CardContent>
             
             {quote.status === "received" && (
@@ -281,9 +277,9 @@ export default function QuoteDetailPage() {
                   <div>
                     <h3 className="text-lg font-medium text-gray-900">{contractor.name}</h3>
                     <StarRating 
-                      rating={contractor.rating} 
+                      rating={contractor.rating ?? 0} 
                       showText={true} 
-                      reviewCount={contractor.reviewCount} 
+                      reviewCount={contractor.reviewCount ?? 0} 
                     />
                   </div>
                 </div>
@@ -295,7 +291,7 @@ export default function QuoteDetailPage() {
                     {contractor.specialty}
                   </Badge>
                   <div className="flex flex-wrap gap-2 mt-2">
-                    {contractor.specialties.map((specialty, index) => (
+                    {contractor.specialties?.map((specialty, index) => (
                       <Badge key={index} variant="outline" className="text-sm">
                         {specialty}
                       </Badge>

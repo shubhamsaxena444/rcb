@@ -62,24 +62,24 @@ export default function Header() {
 
         <nav className="hidden md:flex items-center space-x-4">
           <Link href="/">
-            <a className={`px-3 py-2 text-sm font-medium ${isActive("/") ? "text-primary" : "text-gray-700 hover:text-primary"}`}>
+            <span className={`px-3 py-2 text-sm font-medium cursor-pointer ${isActive("/") ? "text-primary" : "text-gray-700 hover:text-primary"}`}>
               Dashboard
-            </a>
+            </span>
           </Link>
           <Link href="/projects/new">
-            <a className={`px-3 py-2 text-sm font-medium ${isActive("/projects") ? "text-primary" : "text-gray-700 hover:text-primary"}`}>
+            <span className={`px-3 py-2 text-sm font-medium cursor-pointer ${isActive("/projects") ? "text-primary" : "text-gray-700 hover:text-primary"}`}>
               Projects
-            </a>
+            </span>
           </Link>
           <Link href="/#contractors">
-            <a className={`px-3 py-2 text-sm font-medium text-gray-700 hover:text-primary`}>
+            <span className={`px-3 py-2 text-sm font-medium cursor-pointer text-gray-700 hover:text-primary`}>
               Contractors
-            </a>
+            </span>
           </Link>
           <Link href="/#quotes">
-            <a className={`px-3 py-2 text-sm font-medium text-gray-700 hover:text-primary`}>
+            <span className={`px-3 py-2 text-sm font-medium cursor-pointer text-gray-700 hover:text-primary`}>
               Quotes
-            </a>
+            </span>
           </Link>
           
           <div className="relative ml-3">

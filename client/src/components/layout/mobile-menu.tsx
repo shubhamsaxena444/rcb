@@ -34,24 +34,24 @@ export default function MobileMenu({ isOpen, onClose, user, onLogout }: MobileMe
           </div>
           
           <Link href="/">
-            <a className="block px-3 py-2 rounded-md text-base font-medium text-primary bg-gray-100" onClick={onClose}>
+            <span className="block px-3 py-2 rounded-md text-base font-medium text-primary bg-gray-100 cursor-pointer" onClick={onClose}>
               Dashboard
-            </a>
+            </span>
           </Link>
           <Link href="/projects/new">
-            <a className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-primary hover:bg-gray-50" onClick={onClose}>
+            <span className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-primary hover:bg-gray-50 cursor-pointer" onClick={onClose}>
               Projects
-            </a>
+            </span>
           </Link>
           <Link href="/#contractors">
-            <a className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-primary hover:bg-gray-50" onClick={onClose}>
+            <span className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-primary hover:bg-gray-50 cursor-pointer" onClick={onClose}>
               Contractors
-            </a>
+            </span>
           </Link>
           <Link href="/#quotes">
-            <a className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-primary hover:bg-gray-50" onClick={onClose}>
+            <span className="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-primary hover:bg-gray-50 cursor-pointer" onClick={onClose}>
               Quotes
-            </a>
+            </span>
           </Link>
           
           {user && (
