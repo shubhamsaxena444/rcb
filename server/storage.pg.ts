@@ -174,64 +174,64 @@ export class DatabaseStorage implements IStorage {
     if (existingContractors.length === 0) {
       const initialContractors: InsertContractor[] = [
         {
-          name: "Premier Construction",
+          name: "Sharma Construction",
           description: "Specializing in full home renovations with over 15 years of experience. Licensed and insured.",
           specialty: "General",
           profileImage: "https://images.unsplash.com/photo-1560250097-0b93528c311a?ixlib=rb-1.2.1&auto=format&fit=crop&w=256&h=256&q=80",
-          email: "info@premierconstruction.com",
-          phone: "555-123-4567",
-          specialties: ["Kitchen", "Bathroom", "Additions"],
-          location: "New York, NY"
+          email: "info@sharmaconstruction.com",
+          phone: "+91 98765 43210",
+          specialties: ["Kitchen", "Bathroom", "Vastu Compliant"],
+          location: "Delhi, India"
         },
         {
-          name: "Elite Kitchen Design",
+          name: "Luxury Kitchen Designs",
           description: "Luxury kitchen renovations and custom cabinetry. Award-winning designs and certified installers.",
           specialty: "Specialist",
           profileImage: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?ixlib=rb-1.2.1&auto=format&fit=crop&w=256&h=256&q=80",
-          email: "design@elitekitchen.com",
-          phone: "555-456-7890",
-          specialties: ["Kitchens", "Cabinets", "Countertops"],
-          location: "Los Angeles, CA"
+          email: "design@luxurykitchens.co.in",
+          phone: "+91 87654 32109",
+          specialties: ["Modular Kitchens", "Cabinets", "Granite Countertops"],
+          location: "Mumbai, India"
         },
         {
           name: "Modern Bath Solutions",
           description: "Complete bathroom remodeling services. Specializing in accessible designs and quick turnarounds.",
           specialty: "Specialist",
           profileImage: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?ixlib=rb-1.2.1&auto=format&fit=crop&w=256&h=256&q=80",
-          email: "info@modernbath.com",
-          phone: "555-789-0123",
-          specialties: ["Bathrooms", "Showers", "Accessible"],
-          location: "Chicago, IL"
+          email: "info@modernbath.co.in",
+          phone: "+91 76543 21098",
+          specialties: ["Bathrooms", "Jacuzzi", "Accessible"],
+          location: "Bangalore, India"
         },
         {
-          name: "Craftsman Home Builders",
+          name: "Patel Home Builders",
           description: "Custom home construction and major renovations with attention to detail and quality craftsmanship.",
           specialty: "General",
           profileImage: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&auto=format&fit=crop&w=256&h=256&q=80",
-          email: "build@craftsmanhomes.com",
-          phone: "555-234-5678",
-          specialties: ["New Construction", "Additions", "Custom Homes"],
-          location: "Seattle, WA"
+          email: "build@patelhomes.in",
+          phone: "+91 65432 10987",
+          specialties: ["New Construction", "Bungalows", "Duplex Homes"],
+          location: "Ahmedabad, India"
         },
         {
           name: "Eco-Friendly Renovations",
           description: "Sustainable and environmentally conscious renovation services using recycled materials and energy-efficient designs.",
           specialty: "Specialist",
           profileImage: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-1.2.1&auto=format&fit=crop&w=256&h=256&q=80",
-          email: "green@ecofriendly.com",
-          phone: "555-345-6789",
-          specialties: ["Green Building", "Energy Efficiency", "Sustainable Materials"],
-          location: "Portland, OR"
+          email: "green@ecofriendly.co.in",
+          phone: "+91 54321 09876",
+          specialties: ["Solar Integration", "Energy Efficiency", "Sustainable Materials"],
+          location: "Pune, India"
         },
         {
-          name: "City Electrical Services",
+          name: "Mehta Electrical Services",
           description: "Professional electrical contractors for residential and commercial projects. Full-service from wiring to smart home installations.",
           specialty: "Electrical",
           profileImage: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?ixlib=rb-1.2.1&auto=format&fit=crop&w=256&h=256&q=80",
-          email: "service@cityelectrical.com",
-          phone: "555-456-7890",
+          email: "service@mehtaelectrical.in",
+          phone: "+91 43210 98765",
           specialties: ["Electrical", "Lighting", "Smart Home"],
-          location: "Austin, TX"
+          location: "Chennai, India"
         }
       ];
       

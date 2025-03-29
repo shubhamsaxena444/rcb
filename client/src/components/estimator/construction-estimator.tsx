@@ -198,9 +198,28 @@ export default function ConstructionEstimator() {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Location</FormLabel>
-                    <FormControl>
-                      <Input placeholder="e.g., ZIP Code" {...field} />
-                    </FormControl>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select city" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="Delhi, India">Delhi</SelectItem>
+                        <SelectItem value="Mumbai, India">Mumbai</SelectItem>
+                        <SelectItem value="Bangalore, India">Bangalore</SelectItem>
+                        <SelectItem value="Chennai, India">Chennai</SelectItem>
+                        <SelectItem value="Hyderabad, India">Hyderabad</SelectItem>
+                        <SelectItem value="Kolkata, India">Kolkata</SelectItem>
+                        <SelectItem value="Pune, India">Pune</SelectItem>
+                        <SelectItem value="Ahmedabad, India">Ahmedabad</SelectItem>
+                        <SelectItem value="Jaipur, India">Jaipur</SelectItem>
+                        <SelectItem value="Lucknow, India">Lucknow</SelectItem>
+                      </SelectContent>
+                    </Select>
                   </FormItem>
                 )}
               />
