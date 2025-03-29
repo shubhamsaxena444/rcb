@@ -9,7 +9,6 @@ import {
   SheetDescription,
   SheetHeader,
   SheetTitle,
-  SheetTrigger,
   SheetFooter,
   SheetClose,
 } from "@/components/ui/sheet";
@@ -117,7 +116,7 @@ export default function ChatBot() {
     return () => {
       socketIo.disconnect();
     };
-  }, [user]);
+  }, [user, form]);
 
   // Scroll to bottom when messages change
   useEffect(() => {
