@@ -4,17 +4,15 @@ import axios from "axios";
 import { User } from "@shared/schema";
 import OpenAI from "openai";
 
-// Initialize Azure OpenAI
+// Initialize OpenAI API client
+// Using standard OpenAI API since we're having issues with Azure OpenAI
 const openai = new OpenAI({
-  apiKey: process.env.AZURE_OPENAI_API_KEY,
-  baseURL: process.env.AZURE_OPENAI_ENDPOINT,
-  defaultQuery: { "api-version": "2024-02-01" },
-  defaultHeaders: { "api-key": process.env.AZURE_OPENAI_API_KEY },
+  apiKey: process.env.OPENAI_API_KEY,
 });
 
-// Get the deployment name with a fallback
-// The newest OpenAI model is "gpt-4o" which was released May 13, 2024. Using this as default if deployment name not provided.
-const deploymentName = process.env.AZURE_OPENAI_DEPLOYMENT_NAME || "gpt-4o";
+// Use the newest OpenAI model
+// The newest OpenAI model is "gpt-4o" which was released May 13, 2024
+const modelName = "gpt-4o";
 
 interface MCPServer {
   uri: string;
@@ -90,7 +88,7 @@ export function setupChatServer(httpServer: HttpServer) {
                 },
                 { role: "user", content: message }
               ],
-              model: deploymentName,
+              model: modelName,
             });
             
             const assistantMessage: ChatMessage = {
@@ -181,7 +179,7 @@ async function handleMCPIntegrationRequest(socket: any, message: string) {
         },
         { role: "user", content: message }
       ],
-      model: deploymentName,
+      model: modelName,
       response_format: { type: "json_object" },
     });
     
