@@ -258,17 +258,17 @@ export async function generateDesignInspiration(data: DesignInspiration): Promis
         .slice(0, 3);
     }
 
-    // Create a separate Azure OpenAI client for DALL-E
-    // Azure DALL-E requires a different configuration
+    // Create a separate Azure OpenAI client for DALL-E with the exact endpoint URL
     const dalleClient = new OpenAI({
       apiKey: process.env.AZURE_OPENAI_API_KEY,
-      baseURL: `${process.env.AZURE_OPENAI_ENDPOINT}/openai/deployments/${process.env.AZURE_OPENAI_DALLE_DEPLOYMENT_NAME}`,
-      defaultQuery: { "api-version": "2023-12-01-preview" },
+      baseURL: "https://skillupaishsax.openai.azure.com",
+      defaultQuery: { "api-version": "2024-02-01" },
       defaultHeaders: { "api-key": process.env.AZURE_OPENAI_API_KEY },
     });
 
-    // Generate image using Azure DALL-E
+    // Generate image using Azure DALL-E with the correct endpoint
     const imageResponse = await dalleClient.images.generate({
+      model: "dall-e-3",
       prompt: promptContent,
       n: 1,
       size: "1024x1024",
