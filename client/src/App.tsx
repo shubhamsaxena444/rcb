@@ -12,6 +12,7 @@ import QuoteDetailPage from "@/pages/quote-detail-page";
 import QuoteComparisonPage from "@/pages/quote-comparison-page";
 import { ProtectedRoute } from "./lib/protected-route";
 import { AuthProvider } from "./hooks/use-auth";
+import ChatBot from "@/components/chat/chat-bot";
 
 function Router() {
   return (
@@ -33,6 +34,7 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
         <Router />
+        <ChatBot />
         <Toaster />
       </AuthProvider>
     </QueryClientProvider>

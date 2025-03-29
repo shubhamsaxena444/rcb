@@ -6,10 +6,11 @@ import { estimateRenovationCost, estimateConstructionCost } from "./openai";
 import { renovationEstimateSchema, constructionEstimateSchema, quoteRequestSchema, insertProjectSchema, insertReviewSchema } from "@shared/schema";
 import { ZodError } from "zod";
 import { fromZodError } from "zod-validation-error";
+import { setupChatServer } from "./chat";
 
 // Middleware to check if user is authenticated
 const isAuthenticated = (req: Request, res: Response, next: any) => {
-  if (req.isAuthenticated()) {
+  if (req.isAuthenticated() && req.user) {
     return next();
   }
   res.status(401).json({ message: "Unauthorized" });
@@ -57,6 +58,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Projects
   app.get("/api/projects", isAuthenticated, async (req, res) => {
     try {
+      if (!req.user) {
+        return res.status(401).json({ message: "Not authenticated" });
+      }
       const projects = await storage.getProjectsByUserId(req.user.id);
       res.json(projects);
     } catch (error) {
@@ -66,6 +70,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.get("/api/projects/:id", isAuthenticated, async (req, res) => {
     try {
+      if (!req.user) {
+        return res.status(401).json({ message: "Not authenticated" });
+      }
+      
       const project = await storage.getProject(parseInt(req.params.id));
       
       if (!project) {
@@ -85,6 +93,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.post("/api/projects", isAuthenticated, async (req, res) => {
     try {
+      if (!req.user) {
+        return res.status(401).json({ message: "Not authenticated" });
+      }
+      
       const validatedData = insertProjectSchema.parse({
         ...req.body,
         userId: req.user.id
@@ -103,6 +115,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.patch("/api/projects/:id", isAuthenticated, async (req, res) => {
     try {
+      if (!req.user) {
+        return res.status(401).json({ message: "Not authenticated" });
+      }
+      
       const project = await storage.getProject(parseInt(req.params.id));
       
       if (!project) {
@@ -124,6 +140,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Quotes
   app.get("/api/quotes", isAuthenticated, async (req, res) => {
     try {
+      if (!req.user) {
+        return res.status(401).json({ message: "Not authenticated" });
+      }
+      
       // Get all projects for the user
       const projects = await storage.getProjectsByUserId(req.user.id);
       const projectIds = projects.map(project => project.id);
@@ -143,6 +163,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.get("/api/quotes/:id", isAuthenticated, async (req, res) => {
     try {
+      if (!req.user) {
+        return res.status(401).json({ message: "Not authenticated" });
+      }
+      
       const quote = await storage.getQuote(parseInt(req.params.id));
       
       if (!quote) {
@@ -163,6 +187,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.post("/api/quotes/request", isAuthenticated, async (req, res) => {
     try {
+      if (!req.user) {
+        return res.status(401).json({ message: "Not authenticated" });
+      }
+      
       const validatedData = quoteRequestSchema.parse(req.body);
       
       // Verify the project belongs to the user
@@ -205,6 +233,10 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.post("/api/reviews", isAuthenticated, async (req, res) => {
     try {
+      if (!req.user) {
+        return res.status(401).json({ message: "Not authenticated" });
+      }
+      
       const validatedData = insertReviewSchema.parse({
         ...req.body,
         userId: req.user.id
@@ -261,5 +293,9 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
 
   const httpServer = createServer(app);
+  
+  // Set up chat server with Socket.IO
+  setupChatServer(httpServer);
+  
   return httpServer;
 }
