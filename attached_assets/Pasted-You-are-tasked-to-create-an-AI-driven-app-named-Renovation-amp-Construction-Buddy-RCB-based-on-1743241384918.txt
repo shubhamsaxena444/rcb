@@ -1,0 +1,59 @@
+You are tasked to create an AI-driven app named "Renovation &amp; Construction Buddy (RCB)" based on the following Product Requirements Document (PRD).
+
+### Overview
+**Product Name**: Renovation &amp; Construction Buddy (RCB)  
+**Purpose**: Empower users to estimate renovation and construction costs using AI, connect with local contractors, and streamline the process of requesting quotes and reviewing contractors.
+
+### Objectives
+1. Provide accurate AI-driven cost estimation for home renovations and construction projects.
+2. Connect users with local contractors for efficient project execution.
+3. Enable users to request and compare quotes from multiple contractors.
+4. Build trust through a contractor rating and review system.
+
+### Key Features
+1. **Cost Estimation**
+   - Renovation Cost Estimator: AI-powered tool to analyze user inputs (e.g., area size, materials, room type) and provide detailed renovation cost estimates.
+   - Construction Cost Estimator: AI-driven model that calculates construction costs based on parameters like plot size, design complexity, and material preferences.
+
+2. **Contractor Connection**
+   - Local Contractor Directory: A database of verified local contractors categorized by specialization (renovation, construction, etc.).
+
+3. **Quote Management**
+   - Request Quotes: Users can send project details to multiple contractors and receive detailed quotes.
+   - Comparison Tool: Side-by-side comparison of quotes based on cost, timeline, and contractor ratings.
+
+4. **Rating &amp; Reviews**
+   - Users can rate contractors based on their experience.
+   - Review system to provide detailed feedback on contractor services.
+
+### User Stories
+1. **Homeowners**
+   - As a homeowner, I want to estimate renovation costs quickly so I can plan my budget effectively.
+   - As a homeowner, I want to compare contractor quotes to choose the best option for my project.
+   - As a homeowner, I want to read reviews of contractors to ensure reliability.
+
+2. **Contractors**
+   - As a contractor, I want to showcase my profile and services to attract more clients.
+   - As a contractor, I want to respond to quote requests efficiently.
+
+### Design Specifications
+- **User Interface (UI)**: Simple and intuitive design with minimal inputs required for AI estimations. Dashboard for users to manage their projects, quotes, and reviews.
+- **User Journey**:
+  1. User inputs project details into the app.
+  2. AI provides cost estimates instantly.
+  3. User connects with local contractors or requests quotes.
+  4. Contractors respond with quotes.
+  5. User compares quotes and selects a contractor.
+  6. After project completion, user rates and reviews the contractor.
+
+### Technical Specifications
+- **Core Technologies**:
+  - AI/ML algorithms for cost estimation using MCP servers.
+  - Cloud-based database for storing contractor profiles and user data.
+  - APIs for integrating third-party tools like Google Maps (for locating contractors).
+
+- **Platforms**:
+  - Mobile app (iOS &amp; Android).
+  - Web application for desktop users.
+
+Please proceed to create "Renovation &amp; Construction Buddy (RCB)" app based on the details above.
