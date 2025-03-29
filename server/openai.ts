@@ -1,4 +1,5 @@
 import OpenAI from "openai";
+import axios from "axios";
 import { RenovationEstimate, ConstructionEstimate } from "@shared/schema";
 import { z } from "zod";
 
@@ -261,22 +262,36 @@ export async function generateDesignInspiration(data: DesignInspiration): Promis
     // Create a separate Azure OpenAI client for DALL-E with the exact endpoint URL
     const dalleClient = new OpenAI({
       apiKey: process.env.AZURE_OPENAI_API_KEY,
-      baseURL: "https://skillupaishsax.openai.azure.com",
+      baseURL: "https://skillupaishsax.openai.azure.com/openai/deployments/dall-e-3/images/generations",
       defaultQuery: { "api-version": "2024-02-01" },
       defaultHeaders: { "api-key": process.env.AZURE_OPENAI_API_KEY },
     });
 
-    // Generate image using Azure DALL-E with the correct endpoint
-    const imageResponse = await dalleClient.images.generate({
-      model: "dall-e-3",
-      prompt: promptContent,
-      n: 1,
-      size: "1024x1024",
-      quality: "standard",
+    // Use axios for direct API calls to Azure OpenAI's DALL-E endpoint
+    
+    const dalleResponse = await axios({
+      method: 'post',
+      url: 'https://skillupaishsax.openai.azure.com/openai/deployments/dall-e-3/images/generations',
+      params: {
+        'api-version': '2024-02-01'
+      },
+      headers: {
+        'Content-Type': 'application/json',
+        'api-key': process.env.AZURE_OPENAI_API_KEY
+      },
+      data: {
+        prompt: promptContent,
+        n: 1,
+        size: '1024x1024',
+        quality: 'standard'
+      }
     });
+    
+    // Extract image URL from axios response
+    const imageUrl = dalleResponse.data.data?.[0]?.url;
 
     return {
-      image: imageResponse.data[0]?.url,
+      image: imageUrl,
       prompt: promptContent,
       description: designDescription,
       tips: tips.slice(0, 3), // Ensure we have at most 3 tips
