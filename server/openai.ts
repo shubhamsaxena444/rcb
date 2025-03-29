@@ -176,7 +176,7 @@ export async function estimateConstructionCost(data: ConstructionEstimate): Prom
 // Design inspiration generation using DALL-E
 export async function generateDesignInspiration(data: DesignInspiration): Promise<any> {
   try {
-    // First, generate a detailed prompt for the DALL-E model
+    // First, generate a detailed prompt for the DALL-E model without using response_format
     const promptGenerationResponse = await openai.chat.completions.create({
       model: process.env.AZURE_OPENAI_DEPLOYMENT_NAME || "",
       messages: [
@@ -193,7 +193,7 @@ export async function generateDesignInspiration(data: DesignInspiration): Promis
 
     const promptContent = promptGenerationResponse.choices[0].message.content || "";
     
-    // Generate design description
+    // Generate design description without using response_format
     const descriptionResponse = await openai.chat.completions.create({
       model: process.env.AZURE_OPENAI_DEPLOYMENT_NAME || "",
       messages: [
@@ -210,7 +210,8 @@ export async function generateDesignInspiration(data: DesignInspiration): Promis
 
     const designDescription = descriptionResponse.choices[0].message.content || "";
 
-    // Generate design tips
+    // Generate design tips without using response_format for JSON
+    // Instead, include "json" in the prompt to satisfy Azure OpenAI requirements
     const tipsResponse = await openai.chat.completions.create({
       model: process.env.AZURE_OPENAI_DEPLOYMENT_NAME || "",
       messages: [
@@ -220,18 +221,54 @@ export async function generateDesignInspiration(data: DesignInspiration): Promis
         },
         { 
           role: "user", 
-          content: `Give 3 design tips for a ${data.room} in the ${data.style} style for an Indian home. ${data.description ? `Additional details: ${data.description}` : ''}`
+          content: `Give 3 design tips in JSON format for a ${data.room} in the ${data.style} style for an Indian home. Return the response as a JSON object with a "tips" array containing 3 string items. ${data.description ? `Additional details: ${data.description}` : ''}`
         }
       ],
-      response_format: { type: "json_object" }
     });
 
-    const tipsContent = tipsResponse.choices[0].message.content || "{}";
-    const tips = JSON.parse(typeof tipsContent === 'string' ? tipsContent : "{}");
+    // Parse tips from the response
+    let tips = [];
+    try {
+      const tipsContent = tipsResponse.choices[0].message.content || "{}";
+      if (tipsContent.includes("{") && tipsContent.includes("}")) {
+        // Extract JSON part from the string
+        const jsonMatch = tipsContent.match(/\{[\s\S]*\}/);
+        if (jsonMatch) {
+          const parsedTips = JSON.parse(jsonMatch[0]);
+          tips = parsedTips.tips || [];
+        }
+      }
+      
+      // If parsing fails or tips not found, extract from text
+      if (!tips.length) {
+        // Try to extract tips as bullet points or numbered list
+        const tipMatches = tipsContent.match(/(\d+[\.\)]\s*|[\-\*]\s*)([^\n\d\-\*]+)/g);
+        if (tipMatches) {
+          tips = tipMatches.map(tip => 
+            tip.replace(/^\d+[\.\)]\s*|^[\-\*]\s*/, '').trim()
+          ).filter(tip => tip.length > 0);
+        }
+      }
+    } catch (e) {
+      console.log("Error parsing tips, using fallback method", e);
+      // Fallback to basic text processing
+      const tipsText = tipsResponse.choices[0].message.content || "";
+      tips = tipsText.split('\n')
+        .filter(line => line.trim().length > 0)
+        .slice(0, 3);
+    }
 
-    // Generate image using DALL-E
-    const imageResponse = await openai.images.generate({
-      model: "dall-e-3",
+    // Create a separate Azure OpenAI client for DALL-E
+    // Azure DALL-E requires a different configuration
+    const dalleClient = new OpenAI({
+      apiKey: process.env.AZURE_OPENAI_API_KEY,
+      baseURL: `${process.env.AZURE_OPENAI_ENDPOINT}/openai/deployments/${process.env.AZURE_OPENAI_DALLE_DEPLOYMENT_NAME}`,
+      defaultQuery: { "api-version": "2023-12-01-preview" },
+      defaultHeaders: { "api-key": process.env.AZURE_OPENAI_API_KEY },
+    });
+
+    // Generate image using Azure DALL-E
+    const imageResponse = await dalleClient.images.generate({
       prompt: promptContent,
       n: 1,
       size: "1024x1024",
@@ -242,7 +279,7 @@ export async function generateDesignInspiration(data: DesignInspiration): Promis
       image: imageResponse.data[0]?.url,
       prompt: promptContent,
       description: designDescription,
-      tips: tips.tips || [],
+      tips: tips.slice(0, 3), // Ensure we have at most 3 tips
       style: data.style,
       room: data.room
     };
@@ -254,7 +291,7 @@ export async function generateDesignInspiration(data: DesignInspiration): Promis
         error?.status === 429 || 
         error?.message?.includes('quota') || 
         error?.message?.includes('rate limit')) {
-      throw new Error("OpenAI API rate limit exceeded. Please try again later or contact support for assistance.");
+      throw new Error("Azure OpenAI API rate limit exceeded. Please try again later or contact support for assistance.");
     }
     
     throw new Error("Failed to generate design inspiration: " + (error?.message || "Unknown error"));
