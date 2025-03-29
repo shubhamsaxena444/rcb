@@ -155,16 +155,16 @@ export default function ChatBot() {
 
   return (
     <>
-      <Sheet open={!isMinimized} onOpenChange={setIsMinimized}>
-        <SheetTrigger asChild>
-          <Button
-            className="fixed bottom-6 right-6 rounded-full h-14 w-14 p-0 shadow-lg"
-            onClick={() => setIsMinimized(false)}
-          >
-            <Bot size={24} />
-          </Button>
-        </SheetTrigger>
-        <SheetContent className="sm:max-w-md p-0 flex flex-col h-[80vh]">
+      {isMinimized ? (
+        <Button
+          className="fixed bottom-6 right-6 rounded-full h-14 w-14 p-0 shadow-lg"
+          onClick={() => setIsMinimized(false)}
+        >
+          <Bot size={24} />
+        </Button>
+      ) : (
+        <Sheet open={!isMinimized} onOpenChange={setIsMinimized}>
+          <SheetContent side="right" className="sm:max-w-md p-0 flex flex-col h-[80vh]">
           <SheetHeader className="p-4 border-b">
             <div className="flex justify-between items-center">
               <SheetTitle>RCB Assistant</SheetTitle>
@@ -339,6 +339,7 @@ export default function ChatBot() {
           </SheetFooter>
         </SheetContent>
       </Sheet>
+      )}
     </>
   );
 }
