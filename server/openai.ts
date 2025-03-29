@@ -42,7 +42,9 @@ export async function estimateRenovationCost(data: RenovationEstimate): Promise<
       response_format: { type: "json_object" }
     });
 
-    const result = JSON.parse(response.choices[0].message.content);
+    const messageContent = response.choices[0].message.content;
+    const content = typeof messageContent === 'string' ? messageContent : "{}";
+    const result = JSON.parse(content);
     
     return {
       totalCost: `$${result.totalCostMin.toLocaleString()} - $${result.totalCostMax.toLocaleString()}`,
@@ -56,8 +58,14 @@ export async function estimateRenovationCost(data: RenovationEstimate): Promise<
       timeline: result.timeline,
       raw: result
     };
-  } catch (error) {
+  } catch (error: any) {
     console.error("Error estimating renovation cost:", error);
+    
+    // Check if this is a rate limit or quota error
+    if (error?.error?.type === 'insufficient_quota' || error?.status === 429) {
+      throw new Error("OpenAI API rate limit exceeded. Please try again later or contact support for assistance.");
+    }
+    
     throw new Error("Failed to generate renovation cost estimate");
   }
 }
@@ -102,7 +110,9 @@ export async function estimateConstructionCost(data: ConstructionEstimate): Prom
       response_format: { type: "json_object" }
     });
 
-    const result = JSON.parse(response.choices[0].message.content);
+    const messageContent = response.choices[0].message.content;
+    const content = typeof messageContent === 'string' ? messageContent : "{}";
+    const result = JSON.parse(content);
     
     return {
       totalCost: `$${result.totalCostMin.toLocaleString()} - $${result.totalCostMax.toLocaleString()}`,
@@ -118,8 +128,14 @@ export async function estimateConstructionCost(data: ConstructionEstimate): Prom
       timeline: result.timeline,
       raw: result
     };
-  } catch (error) {
+  } catch (error: any) {
     console.error("Error estimating construction cost:", error);
+    
+    // Check if this is a rate limit or quota error
+    if (error?.error?.type === 'insufficient_quota' || error?.status === 429) {
+      throw new Error("OpenAI API rate limit exceeded. Please try again later or contact support for assistance.");
+    }
+    
     throw new Error("Failed to generate construction cost estimate");
   }
 }
