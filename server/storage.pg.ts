@@ -1,4 +1,11 @@
-import { users, type User, type InsertUser, contractors, type Contractor, type InsertContractor, projects, type Project, type InsertProject, quotes, type Quote, type InsertQuote, reviews, type Review, type InsertReview } from "@shared/schema";
+import { 
+  users, type User, type InsertUser, 
+  contractors, type Contractor, type InsertContractor, 
+  projects, type Project, type InsertProject, 
+  quotes, type Quote, type InsertQuote, 
+  reviews, type Review, type InsertReview,
+  designInspirations, type SavedDesignInspiration, type InsertDesignInspiration
+} from "@shared/schema";
 import { db, pool } from "./db";
 import { eq, and, like, desc, asc, sql } from "drizzle-orm";
 import session from "express-session";
@@ -165,6 +172,28 @@ export class DatabaseStorage implements IStorage {
     );
     
     return review;
+  }
+  
+  // Design Inspiration methods
+  async getDesignInspiration(id: number): Promise<SavedDesignInspiration | undefined> {
+    const [inspiration] = await db.select()
+      .from(designInspirations)
+      .where(eq(designInspirations.id, id));
+    return inspiration;
+  }
+  
+  async getDesignInspirationsByUserId(userId: number): Promise<SavedDesignInspiration[]> {
+    return await db.select()
+      .from(designInspirations)
+      .where(eq(designInspirations.userId, userId))
+      .orderBy(desc(designInspirations.createdAt));
+  }
+  
+  async createDesignInspiration(insertInspiration: InsertDesignInspiration): Promise<SavedDesignInspiration> {
+    const [inspiration] = await db.insert(designInspirations)
+      .values(insertInspiration)
+      .returning();
+    return inspiration;
   }
   
   // Seed initial contractors if none exist

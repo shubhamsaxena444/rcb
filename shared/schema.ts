@@ -108,6 +108,24 @@ export const insertReviewSchema = createInsertSchema(reviews).omit({
   createdAt: true,
 });
 
+// Design Inspirations model
+export const designInspirations = pgTable("design_inspirations", {
+  id: serial("id").primaryKey(),
+  userId: integer("user_id").notNull().references(() => users.id, { onDelete: 'cascade' }),
+  room: text("room").notNull(),
+  style: text("style").notNull(),
+  description: text("description"),
+  imageUrl: text("image_url"),
+  prompt: text("prompt"),
+  tips: text("tips").array(),
+  createdAt: timestamp("created_at").defaultNow(),
+});
+
+export const insertDesignInspirationSchema = createInsertSchema(designInspirations).omit({
+  id: true,
+  createdAt: true,
+});
+
 // Estimate request schema (for API)
 export const renovationEstimateSchema = z.object({
   renovationType: z.string(),
@@ -137,6 +155,7 @@ export const quoteRequestSchema = z.object({
 export const usersRelations = relations(users, ({ many }) => ({
   projects: many(projects),
   reviews: many(reviews),
+  designInspirations: many(designInspirations),
 }));
 
 export const contractorsRelations = relations(contractors, ({ many }) => ({
@@ -178,6 +197,13 @@ export const reviewsRelations = relations(reviews, ({ one }) => ({
   }),
 }));
 
+export const designInspirationsRelations = relations(designInspirations, ({ one }) => ({
+  user: one(users, {
+    fields: [designInspirations.userId],
+    references: [users.id],
+  }),
+}));
+
 // Export types
 export type User = typeof users.$inferSelect;
 export type InsertUser = z.infer<typeof insertUserSchema>;
@@ -189,7 +215,8 @@ export type Quote = typeof quotes.$inferSelect;
 export type InsertQuote = z.infer<typeof insertQuoteSchema>;
 export type Review = typeof reviews.$inferSelect;
 export type InsertReview = z.infer<typeof insertReviewSchema>;
-// Design inspiration schema (for AI)
+
+// Design inspiration request schema (for API)
 export const designInspirationSchema = z.object({
   room: z.string(),
   style: z.string(),
@@ -200,3 +227,5 @@ export type RenovationEstimate = z.infer<typeof renovationEstimateSchema>;
 export type ConstructionEstimate = z.infer<typeof constructionEstimateSchema>;
 export type QuoteRequest = z.infer<typeof quoteRequestSchema>;
 export type DesignInspiration = z.infer<typeof designInspirationSchema>;
+export type SavedDesignInspiration = typeof designInspirations.$inferSelect;
+export type InsertDesignInspiration = z.infer<typeof insertDesignInspirationSchema>;

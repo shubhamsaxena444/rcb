@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { useAuth } from "@/hooks/use-auth";
 import {
   Carousel,
   CarouselContent,
@@ -34,7 +35,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { apiRequest } from "@/lib/queryClient";
+import { apiRequest, queryClient } from "@/lib/queryClient";
 import { Loader2, RefreshCw, Sparkles } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
@@ -131,6 +132,34 @@ export default function DesignInspirationCarousel() {
   const [activeInspiration, setActiveInspiration] = useState<DesignInspiration | null>(null);
   const [isDetailOpen, setIsDetailOpen] = useState<boolean>(false);
   const { toast } = useToast();
+  const { user, isLoading, error } = useAuth();
+  
+  // Fetch saved design inspirations
+  const { 
+    data: savedInspirations, 
+    isLoading: isFetchingInspirations, 
+    error: inspirationsError 
+  } = useQuery({ 
+    queryKey: ['/api/design/inspirations'],
+    enabled: !isLoading && !error && !!user // Only fetch when authenticated
+  });
+  
+  // Use saved inspirations when available
+  useEffect(() => {
+    if (savedInspirations && Array.isArray(savedInspirations) && savedInspirations.length > 0) {
+      // Map saved inspirations to the format expected by the component
+      const mappedInspirations: DesignInspiration[] = savedInspirations.map(saved => ({
+        style: saved.style,
+        room: saved.room,
+        description: saved.description || '',
+        image: saved.imageUrl,
+        tips: saved.tips || [],
+        prompt: saved.prompt || undefined,
+      }));
+      
+      setInspirations(mappedInspirations);
+    }
+  }, [savedInspirations]);
 
   // Generate a new design inspiration
   const generateDesignInspiration = async () => {
@@ -156,6 +185,9 @@ export default function DesignInspirationCarousel() {
 
       // Add the new inspiration to the beginning of the array
       setInspirations(prev => [newInspiration, ...prev].slice(0, 10));
+      
+      // Invalidate the inspirations query to refresh the data
+      queryClient.invalidateQueries({ queryKey: ['/api/design/inspirations'] });
       
       toast({
         title: "Design generated!",

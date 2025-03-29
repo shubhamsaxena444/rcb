@@ -293,10 +293,28 @@ export async function registerRoutes(app: Express): Promise<Server> {
   });
   
   // Design Inspiration
-  app.post("/api/design/inspiration", async (req, res) => {
+  app.post("/api/design/inspiration", isAuthenticated, async (req, res) => {
     try {
+      if (!req.user) {
+        return res.status(401).json({ message: "Not authenticated" });
+      }
+      
       const validatedData = designInspirationSchema.parse(req.body);
       const inspiration = await generateDesignInspiration(validatedData);
+      
+      // Save the generated design to the database
+      if (inspiration && inspiration.image) {
+        await storage.createDesignInspiration({
+          userId: req.user.id,
+          room: validatedData.room,
+          style: validatedData.style,
+          description: validatedData.description || null,
+          imageUrl: inspiration.image,
+          prompt: inspiration.prompt || null,
+          tips: inspiration.tips || [],
+        });
+      }
+      
       res.json(inspiration);
     } catch (error) {
       if (error instanceof ZodError) {
@@ -305,6 +323,21 @@ export async function registerRoutes(app: Express): Promise<Server> {
       }
       console.error(error);
       res.status(500).json({ message: "Failed to generate design inspiration" });
+    }
+  });
+  
+  // Get saved design inspirations for current user
+  app.get("/api/design/inspirations", isAuthenticated, async (req, res) => {
+    try {
+      if (!req.user) {
+        return res.status(401).json({ message: "Not authenticated" });
+      }
+      
+      const inspirations = await storage.getDesignInspirationsByUserId(req.user.id);
+      res.json(inspirations);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: "Failed to retrieve design inspirations" });
     }
   });
 

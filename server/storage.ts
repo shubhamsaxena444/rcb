@@ -1,4 +1,11 @@
-import { users, type User, type InsertUser, contractors, type Contractor, type InsertContractor, projects, type Project, type InsertProject, quotes, type Quote, type InsertQuote, reviews, type Review, type InsertReview } from "@shared/schema";
+import { 
+  users, type User, type InsertUser, 
+  contractors, type Contractor, type InsertContractor, 
+  projects, type Project, type InsertProject, 
+  quotes, type Quote, type InsertQuote, 
+  reviews, type Review, type InsertReview,
+  designInspirations, type SavedDesignInspiration, type InsertDesignInspiration
+} from "@shared/schema";
 import session from "express-session";
 import createMemoryStore from "memorystore";
 
@@ -37,6 +44,11 @@ export interface IStorage {
   getReviewsByUserId(userId: number): Promise<Review[]>;
   createReview(review: InsertReview): Promise<Review>;
   
+  // Design Inspiration methods
+  getDesignInspiration(id: number): Promise<SavedDesignInspiration | undefined>;
+  getDesignInspirationsByUserId(userId: number): Promise<SavedDesignInspiration[]>;
+  createDesignInspiration(inspiration: InsertDesignInspiration): Promise<SavedDesignInspiration>;
+  
   // Session store
   sessionStore: any; // express-session store
 }
@@ -47,12 +59,14 @@ export class MemStorage implements IStorage {
   private projects: Map<number, Project>;
   private quotes: Map<number, Quote>;
   private reviews: Map<number, Review>;
+  private designInspirations: Map<number, SavedDesignInspiration>;
   
   private userId: number;
   private contractorId: number;
   private projectId: number;
   private quoteId: number;
   private reviewId: number;
+  private designInspirationId: number;
   
   public sessionStore: any; // express-session store
 
@@ -62,12 +76,14 @@ export class MemStorage implements IStorage {
     this.projects = new Map();
     this.quotes = new Map();
     this.reviews = new Map();
+    this.designInspirations = new Map();
     
     this.userId = 1;
     this.contractorId = 1;
     this.projectId = 1;
     this.quoteId = 1;
     this.reviewId = 1;
+    this.designInspirationId = 1;
     
     // Initialize session store
     this.sessionStore = new MemoryStore({ checkPeriod: 86400000 });
@@ -281,6 +297,32 @@ export class MemStorage implements IStorage {
     );
     
     return review;
+  }
+  
+  // Design Inspiration methods
+  async getDesignInspiration(id: number): Promise<SavedDesignInspiration | undefined> {
+    return this.designInspirations.get(id);
+  }
+  
+  async getDesignInspirationsByUserId(userId: number): Promise<SavedDesignInspiration[]> {
+    return Array.from(this.designInspirations.values()).filter(
+      (inspiration) => inspiration.userId === userId
+    );
+  }
+  
+  async createDesignInspiration(insertInspiration: InsertDesignInspiration): Promise<SavedDesignInspiration> {
+    const id = this.designInspirationId++;
+    const inspiration: SavedDesignInspiration = {
+      ...insertInspiration,
+      id,
+      createdAt: new Date(),
+      description: insertInspiration.description || null,
+      imageUrl: insertInspiration.imageUrl || null,
+      prompt: insertInspiration.prompt || null,
+      tips: insertInspiration.tips || [],
+    };
+    this.designInspirations.set(id, inspiration);
+    return inspiration;
   }
   
   // Seed data for initial contractors
