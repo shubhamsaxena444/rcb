@@ -1,9 +1,12 @@
 import OpenAI from "openai";
 import { RenovationEstimate, ConstructionEstimate } from "@shared/schema";
 
-// Initialize OpenAI client
-const openai = new OpenAI({ 
-  apiKey: process.env.OPENAI_API_KEY || "your-api-key" 
+// Initialize Azure OpenAI client
+const openai = new OpenAI({
+  apiKey: process.env.AZURE_OPENAI_API_KEY,
+  baseURL: `${process.env.AZURE_OPENAI_ENDPOINT}/openai/deployments/${process.env.AZURE_OPENAI_DEPLOYMENT_NAME}`,
+  defaultQuery: { "api-version": "2023-12-01-preview" },
+  defaultHeaders: { "api-key": process.env.AZURE_OPENAI_API_KEY },
 });
 
 // Renovation cost estimation
@@ -34,7 +37,7 @@ export async function estimateRenovationCost(data: RenovationEstimate): Promise<
     `;
 
     const response = await openai.chat.completions.create({
-      model: "gpt-4o", // the newest OpenAI model is "gpt-4o" which was released May 13, 2024. do not change this unless explicitly requested by the user
+      model: process.env.AZURE_OPENAI_DEPLOYMENT_NAME || "",
       messages: [
         { role: "system", content: "You are a professional renovation cost estimator with 20 years of experience." },
         { role: "user", content: prompt }
@@ -62,11 +65,14 @@ export async function estimateRenovationCost(data: RenovationEstimate): Promise<
     console.error("Error estimating renovation cost:", error);
     
     // Check if this is a rate limit or quota error
-    if (error?.error?.type === 'insufficient_quota' || error?.status === 429) {
-      throw new Error("OpenAI API rate limit exceeded. Please try again later or contact support for assistance.");
+    if (error?.error?.type === 'insufficient_quota' || 
+        error?.status === 429 || 
+        error?.message?.includes('quota') || 
+        error?.message?.includes('rate limit')) {
+      throw new Error("Azure OpenAI API rate limit exceeded. Please try again later or contact support for assistance.");
     }
     
-    throw new Error("Failed to generate renovation cost estimate");
+    throw new Error("Failed to generate renovation cost estimate: " + (error?.message || "Unknown error"));
   }
 }
 
@@ -102,7 +108,7 @@ export async function estimateConstructionCost(data: ConstructionEstimate): Prom
     `;
 
     const response = await openai.chat.completions.create({
-      model: "gpt-4o", // the newest OpenAI model is "gpt-4o" which was released May 13, 2024. do not change this unless explicitly requested by the user
+      model: process.env.AZURE_OPENAI_DEPLOYMENT_NAME || "",
       messages: [
         { role: "system", content: "You are a professional construction cost estimator with 20 years of experience." },
         { role: "user", content: prompt }
@@ -132,10 +138,13 @@ export async function estimateConstructionCost(data: ConstructionEstimate): Prom
     console.error("Error estimating construction cost:", error);
     
     // Check if this is a rate limit or quota error
-    if (error?.error?.type === 'insufficient_quota' || error?.status === 429) {
-      throw new Error("OpenAI API rate limit exceeded. Please try again later or contact support for assistance.");
+    if (error?.error?.type === 'insufficient_quota' || 
+        error?.status === 429 || 
+        error?.message?.includes('quota') || 
+        error?.message?.includes('rate limit')) {
+      throw new Error("Azure OpenAI API rate limit exceeded. Please try again later or contact support for assistance.");
     }
     
-    throw new Error("Failed to generate construction cost estimate");
+    throw new Error("Failed to generate construction cost estimate: " + (error?.message || "Unknown error"));
   }
 }
