@@ -40,8 +40,27 @@ export default function ContractorMap({
   // Load Google Maps API
   const { isLoaded, loadError } = useJsApiLoader({
     id: 'google-map-script',
-    googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY || ''
+    googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY || '',
+    libraries: ['places']
   });
+
+  // Show error if API key is missing
+  if (!import.meta.env.VITE_GOOGLE_MAPS_API_KEY) {
+    return (
+      <div className="p-4 text-center">
+        <p className="text-red-500">Google Maps API key is missing. Please add VITE_GOOGLE_MAPS_API_KEY to environment variables.</p>
+      </div>
+    );
+  }
+
+  // Show error if map failed to load
+  if (loadError) {
+    return (
+      <div className="p-4 text-center">
+        <p className="text-red-500">Error loading Google Maps. Please check your API key and internet connection.</p>
+      </div>
+    );
+  }
 
   // Fetch contractors if not provided as props
   const { data: fetchedContractors, isLoading: isLoadingContractors } = useQuery<Contractor[]>({
