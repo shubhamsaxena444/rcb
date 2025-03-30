@@ -40,16 +40,16 @@ export default function ContractorMap({
   // Load Google Maps API
   const { isLoaded, loadError } = useJsApiLoader({
     id: 'google-map-script',
-    googleMapsApiKey: process.env.GOOGLE_MAPS_API_KEY || ''
+    googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY || ''
   });
 
   // Fetch contractors if not provided as props
-  const { data: fetchedContractors, isLoading: isLoadingContractors } = useQuery({
+  const { data: fetchedContractors, isLoading: isLoadingContractors } = useQuery<Contractor[]>({
     queryKey: ['/api/contractors'],
     enabled: !propContractors
   });
 
-  const contractors = propContractors || fetchedContractors || [];
+  const contractors: Contractor[] = propContractors || (fetchedContractors && Array.isArray(fetchedContractors) ? fetchedContractors : []);
   
   // State for the map and selected marker
   const [map, setMap] = useState<google.maps.Map | null>(null);
@@ -83,7 +83,7 @@ export default function ContractorMap({
   // Set selected marker based on selectedContractorId
   useEffect(() => {
     if (selectedContractorId && contractors) {
-      const selected = contractors.find(c => c.id === selectedContractorId);
+      const selected = contractors.find((c: Contractor) => c.id === selectedContractorId);
       if (selected) {
         setSelectedMarker(selected);
       }
@@ -180,7 +180,7 @@ export default function ContractorMap({
         })}
         
         {/* Show info window for selected marker */}
-        {showInfoWindows && selectedMarker && (
+        {showInfoWindows && selectedMarker && selectedMarker.specialties && (
           <InfoWindow
             position={{
               lat: selectedMarker.latitude || defaultCenter.lat + (Math.random() * 0.1 - 0.05),
@@ -195,7 +195,7 @@ export default function ContractorMap({
                 <span>{selectedMarker.location}</span>
               </div>
               <div className="mt-2 flex gap-1">
-                {selectedMarker.specialties.slice(0, 2).map((specialty, index) => (
+                {selectedMarker.specialties.slice(0, 2).map((specialty: string, index: number) => (
                   <Badge key={index} variant="outline" className="text-[10px]">
                     {specialty}
                   </Badge>

@@ -61,22 +61,25 @@ export default function ContractorFinder() {
   });
 
   // Filter contractors based on search criteria
-  const filteredContractors = contractors?.filter(contractor => {
+  const filteredContractors = contractors && Array.isArray(contractors) ? contractors.filter(contractor => {
+    // Ensure contractor.specialties is an array
+    const specialties = contractor.specialties || [];
+    
     const matchesQuery = searchQuery === '' || 
       contractor.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       contractor.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      contractor.specialties.some(s => s.toLowerCase().includes(searchQuery.toLowerCase()));
+      specialties.some((s: string) => s && s.toLowerCase().includes(searchQuery.toLowerCase()));
       
     const matchesSpecialty = selectedSpecialty === '' || 
-      contractor.specialties.includes(selectedSpecialty);
+      specialties.includes(selectedSpecialty);
       
     const matchesLocation = selectedLocation === '' || selectedLocation === 'All India' ||
-      contractor.location.includes(selectedLocation);
+      (contractor.location && contractor.location.includes(selectedLocation));
       
     const matchesRating = contractor.rating >= ratingFilter[0];
     
     return matchesQuery && matchesSpecialty && matchesLocation && matchesRating;
-  });
+  }) : [];
 
   // View contractor profile
   const viewContractorProfile = (contractorId: number) => {
@@ -270,7 +273,7 @@ export default function ContractorFinder() {
                       <div>
                         <p className="text-sm font-medium mb-1">Specialties</p>
                         <div className="flex flex-wrap gap-1">
-                          {selectedContractor.specialties.map((specialty, index) => (
+                          {selectedContractor.specialties && selectedContractor.specialties.map((specialty: string, index: number) => (
                             <Badge key={index} variant="outline">
                               {specialty}
                             </Badge>
@@ -332,12 +335,12 @@ export default function ContractorFinder() {
                       </span>
                     </div>
                     <div className="flex flex-wrap gap-1 mb-3">
-                      {contractor.specialties.slice(0, 3).map((specialty, index) => (
+                      {contractor.specialties && contractor.specialties.slice(0, 3).map((specialty: string, index: number) => (
                         <Badge key={index} variant="outline">
                           {specialty}
                         </Badge>
                       ))}
-                      {contractor.specialties.length > 3 && (
+                      {contractor.specialties && contractor.specialties.length > 3 && (
                         <Badge variant="outline">
                           +{contractor.specialties.length - 3}
                         </Badge>
