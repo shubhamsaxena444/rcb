@@ -166,7 +166,7 @@ export default function ChatBot() {
           <Bot size={24} />
         </Button>
       ) : (
-        <Sheet open={!isMinimized} onOpenChange={setIsMinimized}>
+        <Sheet defaultOpen={true} onOpenChange={(open) => setIsMinimized(!open)}>
           <SheetContent side="right" className="sm:max-w-md p-0 flex flex-col h-[80vh]">
           <SheetHeader className="p-4 border-b">
             <div className="flex justify-between items-center">
@@ -258,16 +258,14 @@ export default function ChatBot() {
                   </DialogContent>
                 </Dialog>
 
-                <SheetClose asChild>
-                  <Button
-                    variant="outline"
-                    size="icon"
-                    className="h-8 w-8"
-                    onClick={handleClose}
-                  >
-                    <X size={16} />
-                  </Button>
-                </SheetClose>
+                <Button
+                  variant="outline"
+                  size="icon"
+                  className="h-8 w-8"
+                  onClick={() => setIsMinimized(true)}
+                >
+                  <X size={16} />
+                </Button>
               </div>
             </div>
             <SheetDescription>
