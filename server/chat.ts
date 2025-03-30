@@ -4,10 +4,12 @@ import axios from "axios";
 import { User } from "@shared/schema";
 import OpenAI from "openai";
 
-// Initialize OpenAI API client
-// Using standard OpenAI API since we're having issues with Azure OpenAI
+// Initialize Azure OpenAI client
 const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
+  apiKey: process.env.AZURE_OPENAI_API_KEY,
+  baseURL: `${process.env.AZURE_OPENAI_ENDPOINT}/openai/deployments/${process.env.AZURE_OPENAI_DEPLOYMENT_NAME}`,
+  defaultQuery: { "api-version": "2023-12-01-preview" },
+  defaultHeaders: { "api-key": process.env.AZURE_OPENAI_API_KEY },
 });
 
 // Use the newest OpenAI model

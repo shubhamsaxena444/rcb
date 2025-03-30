@@ -144,12 +144,16 @@ export default function ChatBot() {
     if (socket) {
       socket.emit("register-mcp", data);
       setIsAddServerDialogOpen(false);
-      
+
       toast({
         title: "MCP Server Added",
         description: `Successfully registered server at ${data.uri}`,
       });
     }
+  };
+
+  const handleClose = () => {
+    setIsMinimized(true);
   };
 
   return (
@@ -186,7 +190,7 @@ export default function ChatBot() {
                         Enter the details for the MCP server you want to connect to.
                       </DialogDescription>
                     </DialogHeader>
-                    
+
                     <Form {...form}>
                       <form
                         onSubmit={form.handleSubmit(handleAddServer)}
@@ -253,13 +257,13 @@ export default function ChatBot() {
                     </Form>
                   </DialogContent>
                 </Dialog>
-                
+
                 <SheetClose asChild>
                   <Button
                     variant="outline"
                     size="icon"
                     className="h-8 w-8"
-                    onClick={() => setIsMinimized(true)}
+                    onClick={handleClose}
                   >
                     <X size={16} />
                   </Button>
