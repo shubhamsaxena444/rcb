@@ -109,6 +109,27 @@ export default function ContractorMap({
     }
   }, [selectedContractorId, contractors]);
 
+  // Initialize map center using useEffect to avoid state updates during render
+  useEffect(() => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setCenter({
+            lat: position.coords.latitude,
+            lng: position.coords.longitude
+          });
+        },
+        () => {
+          toast({
+            title: "Location access denied",
+            description: "Using default location. Grant location access for better results.",
+            variant: "default",
+          });
+        }
+      );
+    }
+  }, []);
+
   // Callback when the map is loaded
   const onLoad = useCallback((map: google.maps.Map) => {
     setMap(map);
