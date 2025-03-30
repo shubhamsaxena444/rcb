@@ -18,7 +18,8 @@ import {
   FileText,
   LogOut,
   Menu,
-  Sparkles
+  Sparkles,
+  Camera
 } from "lucide-react";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 
@@ -59,6 +60,12 @@ export default function NavBar() {
       label: "Design Ideas",
       icon: <Sparkles className="h-4 w-4 mr-2" />,
       isActive: location === "/design-inspiration"
+    },
+    {
+      href: "/ar-preview",
+      label: "AR Preview",
+      icon: <Camera className="h-4 w-4 mr-2" />,
+      isActive: location === "/ar-preview"
     }
   ];
 
@@ -119,6 +126,12 @@ export default function NavBar() {
                   <Link href="/design-inspiration" className="flex cursor-pointer items-center">
                     <Sparkles className="mr-2 h-4 w-4" />
                     <span>Design Ideas</span>
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link href="/ar-preview" className="flex cursor-pointer items-center">
+                    <Camera className="mr-2 h-4 w-4" />
+                    <span>AR Preview</span>
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />

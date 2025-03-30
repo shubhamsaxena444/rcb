@@ -12,6 +12,7 @@ import CreateProjectPage from "@/pages/create-project-page";
 import QuoteDetailPage from "@/pages/quote-detail-page";
 import QuoteComparisonPage from "@/pages/quote-comparison-page";
 import DesignInspirationPage from "@/pages/design-inspiration-page";
+import ARPreviewPage from "@/pages/ar-preview-page";
 import { ProtectedRoute } from "./lib/protected-route";
 import { AuthProvider } from "./hooks/use-auth";
 import ChatBot from "@/components/chat/chat-bot";
@@ -28,6 +29,7 @@ function Router() {
       <ProtectedRoute path="/quotes/:id" component={QuoteDetailPage} />
       <ProtectedRoute path="/quotes/compare/:projectId" component={QuoteComparisonPage} />
       <ProtectedRoute path="/design-inspiration" component={DesignInspirationPage} />
+      <ProtectedRoute path="/ar-preview" component={ARPreviewPage} />
       <Route path="/auth" component={AuthPage} />
       <Route component={NotFound} />
     </Switch>
