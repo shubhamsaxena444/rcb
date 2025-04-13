@@ -1,10 +1,14 @@
+import 'dotenv/config';
 import express, { type Request, Response, NextFunction } from "express";
 import { registerRoutes } from "./routes";
 import { setupVite, serveStatic, log } from "./vite";
+import { CosmosStorage } from "./storage.cosmos"; // Import CosmosStorage
 
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+
+const storage = new CosmosStorage(); // Initialize CosmosStorage
 
 app.use((req, res, next) => {
   const start = Date.now();
@@ -63,7 +67,6 @@ app.use((req, res, next) => {
   server.listen({
     port,
     host: "0.0.0.0",
-    reusePort: true,
   }, () => {
     log(`serving on port ${port}`);
   });

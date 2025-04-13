@@ -90,7 +90,7 @@ export async function estimateRenovationCost(data: RenovationEstimate): Promise<
       throw new Error("Azure OpenAI API rate limit exceeded. Please try again later or contact support for assistance.");
     }
     
-    throw new Error("Failed to generate renovation cost estimate: " + (error?.message || "Unknown error"));
+    throw new Error("Failed to generate renovation cost estimate: " + (error?.message || "Unknown error. Please ensure AZURE_OPENAI_API_KEY, AZURE_OPENAI_ENDPOINT and AZURE_OPENAI_DEPLOYMENT_NAME are set."));
   }
 }
 
